@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lightning-whisper-mlx"
+version = "0.0.10"
+dependencies = [
+    "huggingface_hub",
+    "mlx",
+    "numba",
+    "numpy",
+    "torch",
+    "tqdm",
+    "more-itertools",
+    "tiktoken==0.3.3",
+    "scipy"
+]
+
+[tool.setuptools]
+packages = ["lightning_whisper_mlx"]
+package-data = {"lightning_whisper_mlx" = ["assets/*"]}
