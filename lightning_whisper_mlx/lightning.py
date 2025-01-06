@@ -49,6 +49,9 @@ models = {
     "distil-large-v3": {
         "base": "mustafaaljadery/distil-whisper-mlx",
     },
+    "large-v3-turbo": {
+        "base": "mlx-community/whisper-large-v3-turbo",
+    },
 }
 
 
@@ -78,14 +81,23 @@ class LightningWhisperMLX:
 
         if "distil" in model:
             filename1 = f"./mlx_models/{self.name}/weights.npz"
+            filename1_alt = f"./mlx_models/{self.name}/weights.safetensors"
             filename2 = f"./mlx_models/{self.name}/config.json"
             local_dir = "./"
         else:
             filename1 = "weights.npz"
+            filename1_alt = "weights.safetensors"
             filename2 = "config.json"
             local_dir = f"./mlx_models/{self.name}"
 
-        hf_hub_download(repo_id=repo_id, filename=filename1, local_dir=local_dir)
+        # Try downloading weights.npz first, if it fails, try model.safetensors
+        try:
+            hf_hub_download(repo_id=repo_id, filename=filename1, local_dir=local_dir)
+        except Exception:
+            hf_hub_download(
+                repo_id=repo_id, filename=filename1_alt, local_dir=local_dir
+            )
+
         hf_hub_download(repo_id=repo_id, filename=filename2, local_dir=local_dir)
 
     def transcribe(
